@@ -209,7 +209,7 @@ while True:
   # Q: why do we need to process the observations here when rollout out the model?
   processed_obs = (torch.as_tensor(obs) - datasets['train'].mean_expert_obs)/datasets['train'].std_expert_obs
   with torch.no_grad():
-    np.clip((model(processed_obs.float()) + 0.5).int().numpy(), -1, 1)[0]
+    processed_obs = np.clip((model(processed_obs.float()) + 0.5).int().numpy(), -1, 1)[0]
   obs, rewards, done, info = env.step(processed_action)
   if done: 
       break;
