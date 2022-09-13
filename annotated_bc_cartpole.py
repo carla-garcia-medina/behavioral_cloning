@@ -62,7 +62,7 @@ Set hyperparams
 pos_weight = (1 - datasets['train'].prop_pos_exmpls)/datasets['train'].prop_pos_exmpls # use the proportion of pos examples to compute a 'pos_weight' used to normalize binary cross entropy loss used to train the model
 criterion = nn.BCEWithLogitsLoss(pos_weight=pos_weight) # initialize the criterion function, Binary Cross Entropy Loss w/ Sigmoid
 obs_dim = env.observation_space.shape[0] # unpack dimension of the observation space from the gym env
-action_dim = env.action_space.shape # unpack dimension of the action space from the gym env
+action_dim = 1 # unpack dimension of the action space from the gym env
 hidden_dim = 32 # set the hidden dimension of the model
 learning_rate = 3e-4 # set the learning rate
 batch_size = 64 # set the batch size
@@ -123,7 +123,7 @@ while True:
   # Q: why do we need to process the observations here when rollout out the model?
   processed_obs = (torch.as_tensor(obs) - datasets['train'].mean_expert_obs)/datasets['train'].std_expert_obs
   with torch.no_grad():
-    processed_action = (model(processed_obs.float()) + 0.5).int().numpy()[0]
+    np.clip((model(processed_obs.float()) + 0.5).int().numpy(), -1, 1)[0]
   obs, rewards, done, info = env.step(processed_action)
   if done: 
       break;
