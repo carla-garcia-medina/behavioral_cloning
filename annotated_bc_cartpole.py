@@ -25,16 +25,6 @@ import os
 from bc_dataset import BCDataset
 
 '''
-Create Env and Train Expert
-'''
-env = gym.make('CartPole-v1')
-
-ppo1_expert = PPO1(MlpPolicy, env, verbose=0)
-ppo1_expert.learn(total_timesteps=250000)
-ppo1_expert.save("ppo1_cartpole")
-ppo1_expert = PPO1.load("ppo1_cartpole")
-
-'''
 Define BC Model as NN with a single hidden layer
 '''
 class Net(nn.Module):
@@ -48,6 +38,16 @@ class Net(nn.Module):
 
     def forward(self, x):
     	return self.module(x)
+
+'''
+Create Env and Train Expert
+'''
+env = gym.make('CartPole-v1')
+
+ppo1_expert = PPO1(MlpPolicy, env, verbose=0)
+ppo1_expert.learn(total_timesteps=250000)
+ppo1_expert.save("ppo1_cartpole")
+ppo1_expert = PPO1.load("ppo1_cartpole")
 
 '''
 Configure the number of trajectory rollouts used to generate the training
